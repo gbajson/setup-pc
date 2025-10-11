@@ -3,6 +3,10 @@ set -Eeuo pipefail
 script_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)
 
 venv_dir=".venv"
+git_email="gbajson@protonmail.ch"
+git_name="Grzegorz Bajson"
+
+
 
 trap on_error ERR
 on_error() {
@@ -25,6 +29,8 @@ parser = argparse.ArgumentParser(prog="$0", formatter_class=argparse.ArgumentDef
 # Add arguments here
 parser.add_argument('-v', '--verbose', action='count', default=0)
 parser.add_argument('--venv-dir', required=False, default="$venv_dir", help="Virtual environment directory")
+parser.add_argument('--git-email', required=False, default="$git_email", help="Git user email")
+parser.add_argument('--git-name', required=False, default="$git_name", help="Git user name")
 args = parser.parse_args()
 for k, v in vars(args).items():
     print("{}={}".format(k, shlex.quote(str(v))))
@@ -37,9 +43,12 @@ fi
 eval $VARS
 [[ $verbose > 0 ]] && set -x
 
+
+
 mkdir -p tmp
 if ! command -v uv &> /dev/null; then
     curl -LsSf https://astral.sh/uv/install.sh | sh
+    source $HOME/.local/bin/env bash
 fi
 
 venv_dir=$(realpath "$venv_dir")
@@ -52,22 +61,7 @@ uv pip install -r <(uv pip compile pyproject.toml)
 
 export PATH="$venv_dir"/bin:$PATH
 
-if ! command -v docker &> /dev/null; then
-  if [[ $(lsb_release -i | grep -i "ubuntu") ]]; then
-    sudo apt-get update
-    ansible-galaxy install geerlingguy.docker
-    ansible-playbook "$script_dir"/install-docker.yml
-  else
-    echo "Please install docker."
-    echo "Documentation: https://docs.docker.com/engine/install/"
-    exit 1
-  fi
-fi
+git config --global user.email "$git_email"
+git config --global user.name "$git_name"
 
-# Check if docker is running
-docker run -it --rm hello-world
-
-# Check docker compose version
-docker version
-docker compose version
 
