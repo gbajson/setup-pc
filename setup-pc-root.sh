@@ -54,12 +54,13 @@ fi
 eval $VARS
 [[ $verbose > 0 ]] && set -x
 
-
-
-mkdir -p tmp
 if ! command -v uv &> /dev/null; then
-    curl -LsSf https://astral.sh/uv/install.sh | sh
-    source $HOME/.local/bin/env bash
+    tmpdir=$(mktemp -d)
+    (
+        cd $tmpdir
+        curl -LsSf https://astral.sh/uv/install.sh | sh
+        source $HOME/.local/bin/env bash
+    )
 fi
 
 venv_dir=$(realpath "$venv_dir")
