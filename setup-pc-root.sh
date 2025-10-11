@@ -93,7 +93,7 @@ docker version
 docker compose version
 
 ansible localhost -c local -b -m ansible.builtin.group -a "name=$user gid=$gid state=present"
-ansible localhost -c local -b -m ansible.builtin.user -a "name=$user uid=$uid group=$user create_home=yes shell=/bin/bash state=present"
+ansible localhost -c local -b -m ansible.builtin.user -a "name=$user uid=$uid group=$user groups=docker,sudo append=yes create_home=yes shell=/bin/bash state=present"
 
 user_home_dir=$(getent passwd gbajson | cut -d: -f6)
 install -m 600 -g "$user" -o "$user" -D /root/.ssh/authorized_keys "$user_home_dir"/.ssh/authorized_keys
