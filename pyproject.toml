@@ -1,0 +1,12 @@
+[project]
+name = "setup-pc"
+version = "0.1.0"
+description = "Packages for setup-pc."
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "ansible>=11.3.0",
+    "awscli>=1.38.9",
+    "pip>=25.0.1",
+    "pre-commit>=4.1.0",
+]
