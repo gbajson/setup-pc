@@ -75,7 +75,6 @@ export PATH="$venv_dir"/bin:$PATH
 
 if ! command -v docker &> /dev/null; then
   if [[ $(lsb_release -i | grep -i "ubuntu") ]]; then
-    apt-get update
     ansible-galaxy install geerlingguy.docker
     ansible-playbook "$script_dir"/install-docker.yml
   else
@@ -91,6 +90,16 @@ docker run -it --rm hello-world
 # Check docker compose version
 docker version
 docker compose version
+
+if ! command -v go &> /dev/null; then
+  if [[ $(lsb_release -i | grep -i "ubuntu") ]]; then
+    apt update 
+    apt -y install golang-go
+  else
+    echo "Please install golang."
+    exit 1
+  fi
+fi
 
 ansible localhost -c local -b -m ansible.builtin.group -a "name=$user gid=$gid state=present"
 ansible localhost -c local -b -m ansible.builtin.user -a "name=$user uid=$uid group=$user groups=docker,sudo append=yes create_home=yes shell=/bin/bash state=present"
