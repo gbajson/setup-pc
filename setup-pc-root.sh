@@ -54,6 +54,7 @@ fi
 eval $VARS
 [[ $verbose > 0 ]] && set -x
 
+export PATH=$PATH:$HOME/.local/bin
 if ! command -v uv &> /dev/null; then
     tmpdir=$(mktemp -d)
     (

@@ -1,5 +1,11 @@
 ---
 - hosts: localhost
   become: yes
+  pre_tasks:
+    - name: Install python-debian into Ansible interpreter venv
+      ansible.builtin.raw: |
+        /root/setup-pc/.venv/bin/pip install --upgrade pip
+        /root/setup-pc/.venv/bin/pip install python-debian
+
   roles:
     - geerlingguy.docker
