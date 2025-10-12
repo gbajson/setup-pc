@@ -58,7 +58,7 @@ export PATH=$PATH:$HOME/.local/bin
 if ! command -v uv &> /dev/null; then
     tmpdir=$(mktemp -d)
     (
-        cd $tmpdir
+        d $tmpdir
         curl -LsSf https://astral.sh/uv/install.sh | sh
         source $HOME/.local/bin/env bash
     )
@@ -110,6 +110,9 @@ if ! command -v cloudflared &> /dev/null; then
       cd "$tmpdir"
       wget https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb
       apt -y install ./cloudflared-linux-amd64.deb
+
+      sudo sysctl -w net.ipv4.ping_group_range="0 $gid"
+      echo "net.ipv4.ping_group_range = 0 $gid" | sudo tee /etc/sysctl.d/99-ping-group.conf
     )
   else
     echo "Please install golang."
