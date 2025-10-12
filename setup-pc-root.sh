@@ -103,6 +103,20 @@ if ! command -v go &> /dev/null; then
 fi
 
 
+if ! command -v cloudflared &> /dev/null; then
+  if [[ $(lsb_release -i | grep -i "ubuntu") ]]; then
+    tmpdir=$(mktemp -d)
+    (
+      cd "$tmpdir"
+      wget https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb
+      apt -y install ./cloudflared-linux-amd64.deb
+    )
+  else
+    echo "Please install golang."
+    exit 1
+  fi
+fi
+
 if ! command -v gh &> /dev/null; then
   if [[ $(lsb_release -i | grep -i "ubuntu") ]]; then
     (type -p wget >/dev/null || (sudo apt update && sudo apt install wget -y)) \
