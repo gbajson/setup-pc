@@ -54,8 +54,9 @@ fi
 venv_dir=$(realpath "$venv_dir")
 
 # Setup Python and venv
-uv python install python3.12
-uv venv "$venv_dir" --allow-existing --python=python3.12
+uv python install 3.13
+uv python pin 3.13
+uv venv "$venv_dir" --allow-existing
 source "$venv_dir/bin/activate"
 uv pip install -r <(uv pip compile pyproject.toml)
 
