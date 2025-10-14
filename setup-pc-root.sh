@@ -144,9 +144,13 @@ user_home_dir=$(getent passwd gbajson | cut -d: -f6)
 install -m 600 -g "$user" -o "$user" -D /root/.ssh/authorized_keys "$user_home_dir"/.ssh/authorized_keys
 
 cd "$user_home_dir"
-test -d "$user_home_dir"/setup-pc && rm -fr "$user_home_dir"/setup-pc
-sudo -u "$user" git clone https://github.com/gbajson/setup-pc.git
-
+if [[ -d "$user_home_dir"/setup-pc ]]; then
+  cd "$user_home_dir"/setup-pc
+  sudo -u "$user" git pull
+else
+  sudo -u "$user" git clone https://github.com/gbajson/setup-pc.git
+fi
+  
 git config --global user.email "$git_email"
 git config --global user.name "$git_name"
 
