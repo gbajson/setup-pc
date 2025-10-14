@@ -58,9 +58,8 @@ export PATH=$PATH:$HOME/.local/bin
 if ! command -v uv &> /dev/null; then
     tmpdir=$(mktemp -d)
     (
-        d $tmpdir
+        cd $tmpdir
         curl -LsSf https://astral.sh/uv/install.sh | sh
-        source $HOME/.local/bin/env bash
     )
 fi
 
