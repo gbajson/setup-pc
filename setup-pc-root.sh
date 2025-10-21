@@ -95,8 +95,9 @@ if ! command -v docker &> /dev/null; then
 fi
 
 if ! command -v lazydocker &> /dev/null; then
+  mkdir -p "$(go env GOPATH)/bin" /usr/local/bin
   go install github.com/jesseduffield/lazydocker@latest
-  sudo install -m 755 "$(go env GOPATH)/bin/lazydocker" /usr/local/bin/
+  install -m 755 "$(go env GOPATH)/bin/lazydocker" /usr/local/bin/
 fi
 
 # Check if docker is running
@@ -115,8 +116,8 @@ if ! command -v cloudflared &> /dev/null; then
       wget https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb
       apt -y install ./cloudflared-linux-amd64.deb
 
-      sudo sysctl -w net.ipv4.ping_group_range="0 $gid"
-      echo "net.ipv4.ping_group_range = 0 $gid" | sudo tee /etc/sysctl.d/99-ping-group.conf
+      sysctl -w net.ipv4.ping_group_range="0 $gid"
+      echo "net.ipv4.ping_group_range = 0 $gid" | tee /etc/sysctl.d/99-ping-group.conf
     )
   else
     echo "Please install golang."
