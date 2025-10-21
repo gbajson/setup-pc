@@ -65,6 +65,16 @@ fi
 
 venv_dir=$(realpath "$venv_dir")
 
+if ! command -v go &> /dev/null; then
+  if [[ $(lsb_release -i | grep -i "ubuntu") ]]; then
+    apt update 
+    apt -y install golang-go
+  else
+    echo "Please install golang."
+    exit 1
+  fi
+fi
+
 # Setup Python and venv
 uv python install python3.12
 uv venv "$venv_dir" --allow-existing --python=python3.12
@@ -84,22 +94,17 @@ if ! command -v docker &> /dev/null; then
   fi
 fi
 
+if ! command -v lazydocker &> /dev/null; then
+  go install github.com/jesseduffield/lazydocker@latest
+  sudo install -m 755 "$(go env GOPATH)/bin/lazydocker" /usr/local/bin/
+fi
+
 # Check if docker is running
 docker run -it --rm hello-world
 
 # Check docker compose version
 docker version
 docker compose version
-
-if ! command -v go &> /dev/null; then
-  if [[ $(lsb_release -i | grep -i "ubuntu") ]]; then
-    apt update 
-    apt -y install golang-go
-  else
-    echo "Please install golang."
-    exit 1
-  fi
-fi
 
 
 if ! command -v cloudflared &> /dev/null; then
@@ -148,7 +153,7 @@ if [[ -d "$user_home_dir"/setup-pc ]]; then
   cd "$user_home_dir"/setup-pc
   sudo -u "$user" git pull
 else
-  sudo -u "$user" git clone https://github.com/gbajson/setup-pc.git
+  sudo -u "$user" git clone git@github.com:gbajson/setup-pc.git
 fi
   
 git config --global user.email "$git_email"
