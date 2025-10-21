@@ -65,4 +65,5 @@ export PATH="$venv_dir"/bin:$PATH
 git config --global user.email "$git_email"
 git config --global user.name "$git_name"
 
-
+# configure lazydocker
+install -m 600 -D config-lazydocker.yml  ~/.config/lazydocker/config.yml

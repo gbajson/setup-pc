@@ -1,0 +1,6 @@
+customCommands:
+  containers:
+    - name: "Exec as root (/bin/bash)"
+      attach: true
+      shell: true
+      command: 'docker exec -it -u root {{ .Container.ID }} /bin/bash'
