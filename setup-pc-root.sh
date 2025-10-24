@@ -100,6 +100,14 @@ if ! command -v lazydocker &> /dev/null; then
   install -m 755 "$(go env GOPATH)/bin/lazydocker" /usr/local/bin/
 fi
 
+if ! command -v dive &> /dev/null; then
+  mkdir -p "$(go env GOPATH)/bin" /usr/local/bin
+  go install github.com/wagoodman/dive@latest
+  install -m 755 "$(go env GOPATH)/bin/dive" /usr/local/bin/
+fi
+
+
+
 # Check if docker is running
 docker run -it --rm hello-world
 
